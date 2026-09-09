@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1788933497098,
+      "tag": "0000_cute_robin_chapel",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1788933699223,
+      "tag": "0001_slimy_doctor_spectrum",
+      "breakpoints": true
+    }
+  ]
+}

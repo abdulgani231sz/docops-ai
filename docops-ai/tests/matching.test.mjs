@@ -1,0 +1,12 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {extract,issuesFor,csvCell} from '../lib/documents.ts';import {demoSamples} from '../lib/demo.ts';
+const docs=demoSamples.map(s=>({...s,fields:extract(s.text,s.kind),hash:s.id,status:'review',revision:0}));
+test('sample invoice detects over-billing against the purchase order',()=>{const issues=issuesFor(docs[1],docs);assert.equal(issues.length,1);assert.equal(issues[0].label,'Quantity mismatch');assert.match(issues[0].detail,/invoice 10, purchase order 8/)});
+test('fully matched invoice passes without treating column headers as items',()=>{assert.equal(docs[3].fields.items.length,2);assert.deepEqual(issuesFor(docs[3],docs),[])});
+test('missing structured items cannot pass',()=>{assert.ok(issuesFor({...docs[3],fields:{...docs[3].fields,items:[]}},docs).some(i=>i.label==='Line items need review'))});
+test('duplicate invoice number and vendor flagged even with different bytes',()=>{const duplicate={...docs[3],id:'other',hash:'other'};assert.ok(issuesFor(duplicate,[...docs,duplicate]).some(i=>i.label==='Possible duplicate'))});
+test('incorrect arithmetic flagged',()=>{const d=structuredClone(docs[3]);d.fields.total+=1;assert.ok(issuesFor(d,docs).some(i=>i.label==='Total calculation mismatch'))});
+test('missing PO prevents approval',()=>assert.ok(issuesFor(docs[3],[docs[3]]).some(i=>i.label==='Purchase order not found')));
+test('unknown subtotal and tax do not silently pass',()=>{const d=structuredClone(docs[3]);d.fields.tax=null;d.fields.subtotal=null;assert.equal(issuesFor(d,docs).length,2)});
+test('already approved complete PO cannot be billed again',()=>{const d=structuredClone(docs[3]);d.id='second';d.fields.number='new';d.hash='new';assert.ok(issuesFor(d,[...docs.map(x=>x.id===docs[3].id?{...x,status:'approved'}:x),d]).some(i=>i.label==='PO already invoiced'))});
+test('CSV cells are quoted and spreadsheet formulas neutralized',()=>{assert.equal(csvCell('=1+1'),'"\'=1+1"');assert.equal(csvCell('a"b'),'"a""b"')});

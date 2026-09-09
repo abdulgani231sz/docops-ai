@@ -1,0 +1,2 @@
+import {demoSamples} from '@/lib/demo';import {extract} from '@/lib/documents';import {insert,json,failure,checkOrigin} from '@/lib/storage';
+export async function POST(r:Request){try{checkOrigin(r);for(const [i,s] of demoSamples.entries()){await insert({...s,fileKey:null,hash:s.id,fields:extract(s.text,s.kind),method:'Sample text · fictional data',status:'review',note:'',createdAt:new Date(Date.now()+i*10).toISOString(),revision:0})}return json({ok:true})}catch(e){return failure(e)}}
