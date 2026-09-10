@@ -1,7 +1,8 @@
 <div align="center">
 
 # DocOps AI
-https://chatgpt.com/backend-api/estuary/content?id=file_00000000b22c81f5bc5b1eb9c9efe458&ts=496949&p=fs&cid=1&sig=1199e741c7682f93620a5b5a59bccb9c33d5073e791c8e414a0c38ad734e7b1c&v=0
+<img width="1672" height="941" alt="image" src="https://github.com/user-attachments/assets/9109857d-539a-43e4-8720-ccc75a68b545" />
+
 ### Document intelligence with a reviewable decision trail.
 
 Extract invoice data. Match purchase orders. Resolve exceptions. Export approved records.
